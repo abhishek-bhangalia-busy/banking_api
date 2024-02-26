@@ -1,6 +1,7 @@
 package db
 
 import (
+	"os"
 
 	"github.com/abhishek-bhangalia-busy/banking-api/models"
 	"github.com/go-pg/pg/v10"
@@ -11,10 +12,10 @@ var DB *pg.DB
 
 func ConnectToDB() *pg.DB{
 	DB = pg.Connect(&pg.Options{
-		Addr:     ":5432",
-		User:     "postgres",
-		Password: "1234",
-		Database: "bank",
+		Addr:     os.Getenv("DB_ADDR"),
+		User:     os.Getenv("DB_USER"),
+		Password: os.Getenv("DB_PASSWORD"),
+		Database: os.Getenv("DB_NAME"),
 	})
 	return DB
 }
@@ -22,6 +23,7 @@ func ConnectToDB() *pg.DB{
 
 func CreateSchema(db *pg.DB) error {
 	models := []interface{}{
+		(*models.User)(nil),
 		(*models.Bank)(nil),
 		(*models.Branch)(nil),
 		(*models.Customer)(nil),
