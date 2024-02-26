@@ -18,6 +18,15 @@ func InsertAccount(account *models.Account) (uint64, error) {
 	return account.ID, nil
 }
 
+func BulkInsertAccount(accounts []models.Account) (error) {
+	_, insertErr := db.DB.Model(&accounts).Insert()
+
+	if insertErr != nil {
+		return insertErr
+	}
+	return nil
+}
+
 func SelectAllAccounts() ([]models.Account, error) {
 	var accounts []models.Account
 	getErr := db.DB.Model(&accounts).Select()

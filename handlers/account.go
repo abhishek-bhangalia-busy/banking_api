@@ -13,6 +13,7 @@ func CreateAccount(c *gin.Context) {
 	var account models.Account
 	if err := c.ShouldBind(&account); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	id, insertErr := queries.InsertAccount(&account)
@@ -21,6 +22,23 @@ func CreateAccount(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusCreated, gin.H{"Account created with id : ": id})
+}
+
+func BulkCreateAccount(c *gin.Context) {
+	var body struct{
+		Accounts []models.Account
+	}
+	if err := c.ShouldBind(&body); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	insertErr := queries.BulkInsertAccount(body.Accounts)
+	if insertErr != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": insertErr.Error()})
+		return
+	}
+	c.JSON(http.StatusCreated, gin.H{"Accounts created successfully : ":""})
 }
 
 func GetAllAccounts(c *gin.Context) {

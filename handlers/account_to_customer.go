@@ -14,6 +14,7 @@ func CreateMapping(c *gin.Context) {
 
 	if err := c.ShouldBind(&mapping); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	id, insertErr := queries.InsertMapping(&mapping)
@@ -22,6 +23,24 @@ func CreateMapping(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusCreated, gin.H{"Mapping created with id : ": id})
+}
+
+func BulkCreateMapping(c *gin.Context) {
+	var body struct{
+		Mappings []models.AccountToCustomer
+	}
+
+	if err := c.ShouldBind(&body); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	insertErr := queries.BulkInsertMapping(body.Mappings)
+	if insertErr != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": insertErr.Error()})
+		return
+	}
+	c.JSON(http.StatusCreated, gin.H{"Mapping created successfully":""})
 }
 
 func GetAllMappings(c *gin.Context) {

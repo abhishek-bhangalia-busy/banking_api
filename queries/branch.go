@@ -17,6 +17,15 @@ func InsertBranch(branch *models.Branch) (uint64, error) {
 	return branch.ID, nil
 }
 
+func BulkInsertBranch(branches []models.Branch) (error) {
+	_, insertErr := db.DB.Model(&branches).Insert()
+
+	if insertErr != nil {
+		return  insertErr
+	}
+	return  nil
+}
+
 func SelectAllBranches() ([]models.Branch, error) {
 	var branches []models.Branch
 	getErr := db.DB.Model(&branches).Select()
@@ -53,6 +62,18 @@ func SelectAllAccountsOfBranchByID(id uint64) ([]models.Account, error){
 		return nil, err
 	}
 	return *accounts, nil
+}
+
+func SelectAllCustomersOfBranchByID(bid uint64) ([]models.Customer, error){
+	customers := new([]models.Customer)
+	accountIDsOfBranch := db.DB.Model((*models.Account)(nil)).Column("id").Where("branch_id = ?",bid)
+	customerIDs := db.DB.Model((*models.AccountToCustomer)(nil)).Column("customer_id").Where("account_id IN (?)",accountIDsOfBranch)
+	
+	err := db.DB.Model(customers).Where("id IN (?)", customerIDs).Select()
+	if err != nil {
+		return nil, err
+	}
+	return *customers, nil
 }
 
 func UpdateBranch(branch *models.Branch) (uint64, error) {

@@ -19,6 +19,16 @@ func InsertMapping(mapping *models.AccountToCustomer) (uint64, error) {
 	return mapping.ID, nil
 }
 
+
+func BulkInsertMapping(mappings []models.AccountToCustomer) (error) {
+	_, insertErr := db.DB.Model(&mappings).Insert()
+
+	if insertErr != nil {
+		return insertErr
+	}
+	return  nil
+}
+
 func SelectAllMappings() ([]models.AccountToCustomer, error) {
 	var mappings []models.AccountToCustomer
 	getErr := db.DB.Model(&mappings).Select()

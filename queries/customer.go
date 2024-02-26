@@ -17,6 +17,17 @@ func InsertCustomer(customer *models.Customer) (uint64, error) {
 	return customer.ID, nil
 }
 
+
+func BulkInsertCustomer(customers []models.Customer) ( error) {
+	_, insertErr := db.DB.Model(&customers).Insert()
+
+	if insertErr != nil {
+		return insertErr
+	}
+	return  nil
+}
+
+
 func SelectAllCustomers() ([]models.Customer, error) {
 	var customers []models.Customer
 	getErr := db.DB.Model(&customers).Select()

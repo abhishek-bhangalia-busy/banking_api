@@ -26,6 +26,7 @@ func CreateTransaction(c *gin.Context) {
 	if err := c.ShouldBind(&transaction); err != nil {
 		// tx.Rollback()
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	_, insertErr := queries.InsertTransaction(tx, &transaction)

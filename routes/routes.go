@@ -15,6 +15,7 @@ func CreateRoutes() {
 
 	bankRoutes := router.Group("/bank")
 	bankRoutes.POST("", middlewares.RequireAuth, handlers.CreateBank)
+	bankRoutes.POST("/bulk", middlewares.RequireAuth, handlers.BulkCreateBanks)	//create multiple banks in single request
 	bankRoutes.GET("",middlewares.RequireAuth, handlers.GetAllBanks)
 	bankRoutes.GET("/branch",middlewares.RequireAuth, handlers.GetAllBanksWithBranches)
 	bankRoutes.GET("/:id",middlewares.RequireAuth, handlers.GetBankByID)
@@ -25,27 +26,30 @@ func CreateRoutes() {
 
 	branchRoutes := router.Group("/branch")
 	branchRoutes.POST("",middlewares.RequireAuth, handlers.CreateBranch)
+	branchRoutes.POST("/bulk",middlewares.RequireAuth, handlers.BulkCreateBranch)
 	branchRoutes.GET("",middlewares.RequireAuth, handlers.GetAllBranches)
 	branchRoutes.GET("/bank/account",middlewares.RequireAuth, handlers.GetAllBranchesWithBankAndAccounts)
 	branchRoutes.GET("/:id",middlewares.RequireAuth, handlers.GetBranchByID)
 	branchRoutes.GET("/:id/account",middlewares.RequireAuth, handlers.GetAllAccountsOfBranchByID)
+	branchRoutes.GET("/:id/customer",middlewares.RequireAuth, handlers.GetAllCustomersOfBranchByID)
 	branchRoutes.PATCH("",middlewares.RequireAuth, handlers.UpdateBranch)
 	branchRoutes.DELETE("",middlewares.RequireAuth, handlers.DeleteAllBranches)
 	branchRoutes.DELETE("/:id",middlewares.RequireAuth, handlers.DeleteBranchByID)
-	//get all customers and accounts
 
 	accountRoutes := router.Group("/account")
 	accountRoutes.POST("",middlewares.RequireAuth, handlers.CreateAccount)
+	accountRoutes.POST("/bulk",middlewares.RequireAuth, handlers.BulkCreateAccount)
 	accountRoutes.GET("",middlewares.RequireAuth, handlers.GetAllAccounts)
 	accountRoutes.GET("/:id",middlewares.RequireAuth, handlers.GetAccountByID)
 	accountRoutes.GET("/:id/customer",middlewares.RequireAuth, handlers.GetAllCustomersByAccountID)
 	accountRoutes.PATCH("",middlewares.RequireAuth, handlers.UpdateAccount)
 	accountRoutes.DELETE("",middlewares.RequireAuth, handlers.DeleteAllAccounts)
 	accountRoutes.DELETE("/:id",middlewares.RequireAuth, handlers.DeleteAccountByID)
-	//add joint account
+	
 
 	customerRoutes := router.Group("/customer")
 	customerRoutes.POST("",middlewares.RequireAuth, handlers.CreateCustomer)
+	customerRoutes.POST("/bulk",middlewares.RequireAuth, handlers.BulkCreateCustomer)
 	customerRoutes.GET("",middlewares.RequireAuth, handlers.GetAllCustomers)
 	customerRoutes.GET("/:id",middlewares.RequireAuth, handlers.GetCustomerByID)
 	customerRoutes.GET("/:id/account",middlewares.RequireAuth, handlers.GetAllAccountsByCustomerID)
@@ -55,6 +59,7 @@ func CreateRoutes() {
 
 	mappingRoutes := router.Group("/account_to_customer")
 	mappingRoutes.POST("",middlewares.RequireAuth, handlers.CreateMapping)
+	mappingRoutes.POST("/bulk",middlewares.RequireAuth, handlers.BulkCreateMapping)
 	mappingRoutes.GET("",middlewares.RequireAuth, handlers.GetAllMappings)
 	mappingRoutes.GET("/:id",middlewares.RequireAuth, handlers.GetMappingByID)
 	mappingRoutes.PATCH("",middlewares.RequireAuth, handlers.UpdateMapping)

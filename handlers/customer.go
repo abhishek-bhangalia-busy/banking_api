@@ -13,6 +13,7 @@ func CreateCustomer(c *gin.Context) {
 	var customer models.Customer
 	if err := c.ShouldBind(&customer); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	id, insertErr := queries.InsertCustomer(&customer)
@@ -21,6 +22,24 @@ func CreateCustomer(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusCreated, gin.H{"Customer created with id : ": id})
+}
+
+
+func BulkCreateCustomer(c *gin.Context) {
+	var body struct {
+		Customers []models.Customer
+	}
+	if err := c.ShouldBind(&body); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	insertErr := queries.BulkInsertCustomer(body.Customers)
+	if insertErr != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": insertErr.Error()})
+		return
+	}
+	c.JSON(http.StatusCreated, gin.H{"Customer created successfully ":""})
 }
 
 func GetAllCustomers(c *gin.Context) {

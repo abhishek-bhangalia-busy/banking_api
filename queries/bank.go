@@ -17,6 +17,15 @@ func InsertBank(bank *models.Bank) (uint64, error) {
 	return bank.ID, nil
 }
 
+func BulkInsertBank(banks []models.Bank) (error) {
+	_, insertErr := db.DB.Model(&banks).Insert()
+
+	if insertErr != nil {
+		return insertErr
+	}
+	return nil
+}
+
 func SelectAllBanks() ([]models.Bank, error) {
 	var banks []models.Bank
 	getErr := db.DB.Model(&banks).Select()

@@ -13,6 +13,7 @@ func CreateBank(c *gin.Context) {
 	var bank models.Bank
 	if err := c.ShouldBind(&bank); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	id, insertErr := queries.InsertBank(&bank)
@@ -21,6 +22,23 @@ func CreateBank(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusCreated, gin.H{"Bank created with id : ": id})
+}
+
+func BulkCreateBanks(c *gin.Context) {
+	var body struct{
+		Banks []models.Bank 
+	}
+	if err := c.ShouldBind(&body); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	insertErr := queries.BulkInsertBank(body.Banks)
+	if insertErr != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": insertErr.Error()})
+		return
+	}
+	c.JSON(http.StatusCreated, gin.H{"Banks created successfully": ""})
 }
 
 func GetAllBanks(c *gin.Context) {
