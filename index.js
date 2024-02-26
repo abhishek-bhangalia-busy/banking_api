@@ -29,7 +29,7 @@ const bankRouter = express.Router()
 bankRouter.get("/", async(req,res)=>{
   console.log("request body is ", req.body)
   try {
-    const response = await fetch('http://localhost:3000/bank', {
+    const response = await fetch('http://localhost:8080/bank', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -51,7 +51,7 @@ bankRouter.get("/", async(req,res)=>{
 bankRouter.post('/', async (req, res) => {
   console.log("request body is ", req.body)
   try {
-    const response = await fetch('http://localhost:3000/bank', {
+    const response = await fetch('http://localhost:8080/bank', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
